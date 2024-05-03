@@ -1,3 +1,5 @@
+import 'package:buscaro_flutter/Constants.dart';
+import 'package:buscaro_flutter/SharedPrefSingleton.dart';
 import 'package:buscaro_flutter/onBoardingWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,12 @@ class OnBoardingScreen extends StatefulWidget {
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
   PageController controller = PageController();
 
+  List<Widget> listOfChildern = [
+    OnBoardingWidget(),
+    OnBoardingWidget(),
+    OnBoardingWidget()
+  ];
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size; //this var has 100% of your screen
@@ -28,29 +36,33 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         controller: controller, // PageController
         count: 3,
         effect: const WormEffect(
-            dotColor:  greyLight,
-            activeDotColor:  orange,
-          dotHeight: 10,
-          dotWidth: 10
-        ), // your preferred effect
+            dotColor: greyLight,
+            activeDotColor: orange,
+            dotHeight: 10,
+            dotWidth: 10), // your preferred effect
         onDotClicked: (index) {});
 
     var pageView = PageView(
-
       controller: controller,
-      children: const [
-        OnBoardingWidget(),
-        OnBoardingWidget(),
-        OnBoardingWidget()
-      ],
+      children: listOfChildern,
+      onPageChanged: (pageIndex) {
+        checkEndOfSlideReach(pageIndex);
+      },
     );
     var stackContainer = Stack(
       alignment: Alignment.center,
       children: [pageView, Positioned(top: actualPlacement, child: indicator)],
     );
 
-
-
     return stackContainer;
+  }
+
+  Future<bool?> checkEndOfSlideReach(int pageIndex) async {
+    if (pageIndex + 1 == listOfChildern.length) {
+      return SharedPrefSingleton().putBool(ON_BOARDING, true);
+    } else {
+      print("current value is ${SharedPrefSingleton().getBool(ON_BOARDING)}");
+      return false;
+    }
   }
 }

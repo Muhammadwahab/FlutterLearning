@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:buscaro_flutter/Constants.dart';
+import 'package:buscaro_flutter/LoginScreen.dart';
+import 'package:buscaro_flutter/SharedPrefSingleton.dart';
 import 'package:buscaro_flutter/models/testmodule/BuscaroMetaResponse.dart';
 import 'package:buscaro_flutter/splash.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +13,6 @@ import 'package:http/http.dart'
 
 import 'OnBoardingScreen.dart';
 import 'colors.dart';
-
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -39,10 +41,12 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     loadData().then((value) => {
-          _timer = Timer(const Duration(seconds: 6), () {
-            Navigator.of(context).pushReplacement(
-                _createRoute()
-            );
+          _timer = Timer(const Duration(seconds: 1), () {
+            if (SharedPrefSingleton().getBool(ON_BOARDING) == true) {
+              Navigator.of(context).pushReplacement(_onLoginScreenRoute());
+            } else {
+              Navigator.of(context).pushReplacement(_onBoardingRoute());
+            }
           })
         });
   }
@@ -58,15 +62,36 @@ class _SplashScreenState extends State<SplashScreen> {
         const SystemUiOverlayStyle(statusBarColor: orange));
   }
 
-  Route _createRoute() {
-     return PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => const OnBoardingScreen(),
+  Route _onBoardingRoute() {
+    return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const OnBoardingScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           var begin = const Offset(1.0, 0.0);
           var end = Offset.zero;
           var curve = Curves.ease;
 
-          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        });
+  }
+
+  Route _onLoginScreenRoute() {
+    return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const LoginScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var begin = const Offset(1.0, 0.0);
+          var end = Offset.zero;
+          var curve = Curves.ease;
+
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
           return SlideTransition(
             position: animation.drive(tween),

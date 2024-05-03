@@ -1,24 +1,47 @@
+import 'dart:ui';
+
 import 'package:buscaro_flutter/SplashScreen.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+import 'SharedPrefSingleton.dart';
+import 'firebase_options.dart';
 
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (!kIsWeb) {
+    await Firebase.initializeApp();
+    crashlyticsContent();
+  }
+  await SharedPrefSingleton().initialize();
 
-  runApp( MaterialApp(
+  runApp(MaterialApp(
     theme: ThemeData(
       primarySwatch: Colors.amber,
     ),
     title: 'Flutter Demo',
     home: const SplashScreen(),
   ));
+}
 
-
+void crashlyticsContent() {
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
+  // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

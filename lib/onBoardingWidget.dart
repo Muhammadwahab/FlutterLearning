@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
+import 'Constants.dart';
+import 'LoginScreen.dart';
+import 'SharedPrefSingleton.dart';
 import 'colors.dart';
 
 class OnBoardingWidget extends StatelessWidget {
@@ -22,9 +25,9 @@ class OnBoardingWidget extends StatelessWidget {
               fit: FlexFit.tight,
               child: Container(
                   child: SvgPicture.asset(
-                    "images/buscaro_splas_logo.svg",
-                    alignment: Alignment.bottomCenter,
-                  )),
+                "images/buscaro_splas_logo.svg",
+                alignment: Alignment.bottomCenter,
+              )),
             ),
             const Spacer(),
             Flexible(
@@ -62,15 +65,19 @@ class OnBoardingWidget extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 25, left: 16, right: 16),
+                      padding:
+                          const EdgeInsets.only(top: 25, left: 16, right: 16),
                       child: ElevatedButton(
                         onPressed: () {
-                          print("on pressed called");
+                          SharedPrefSingleton().putBool(ON_BOARDING, true);
+                          Navigator.of(context)
+                              .pushReplacement(_onLoginScreenRoute());
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6), // <-- Radius
+                            borderRadius:
+                                BorderRadius.circular(6), // <-- Radius
                           ),
                         ),
                         child: const Text(
@@ -88,5 +95,24 @@ class OnBoardingWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Route _onLoginScreenRoute() {
+    return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const LoginScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var begin = const Offset(1.0, 0.0);
+          var end = Offset.zero;
+          var curve = Curves.ease;
+
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        });
   }
 }
