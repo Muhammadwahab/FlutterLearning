@@ -19,9 +19,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   PageController controller = PageController();
 
   List<Widget> listOfChildern = [
-    OnBoardingWidget(),
-    OnBoardingWidget(),
-    OnBoardingWidget()
+    const OnBoardingWidget(),
+    const OnBoardingWidget(),
+    const OnBoardingWidget()
   ];
 
   @override

@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:buscaro_flutter/SplashScreen.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'SharedPrefSingleton.dart';
-import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +16,7 @@ Future<void> main() async {
   await SharedPrefSingleton().initialize();
 
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     theme: ThemeData(
       primarySwatch: Colors.amber,
     ),
@@ -125,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),
