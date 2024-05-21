@@ -18,6 +18,7 @@ Future<void> main() async {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
+      useMaterial3: true,
       primarySwatch: Colors.amber,
     ),
     title: 'Flutter Demo',

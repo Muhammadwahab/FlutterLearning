@@ -44,6 +44,8 @@ dependencies:
   firebase_crashlytics: ^3.5.4
   firebase_analytics: ^10.10.4
   shared_preferences: ^2.2.3
+  dropdown_button2: ^2.3.8
+
 
 dev_dependencies:
   flutter_test:
