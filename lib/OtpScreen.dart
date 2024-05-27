@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'CustomViews.dart';
+import 'PasswordListing.dart';
 import 'colors.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -136,7 +137,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   ),
                 ),
                 customButton(() {
-                  Navigator.of(context).pushReplacement(_onHomeRoute());
+                  Navigator.of(context).pushReplacement(_onPasswordListing());
                   // print("Login button click");
                 })
               ],
@@ -250,6 +251,26 @@ class _OtpScreenState extends State<OtpScreen> {
 
           var tween =
               Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        });
+  }
+
+
+  Route _onPasswordListing() {
+    return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+        const PasswordListing(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var begin = const Offset(1.0, 0.0);
+          var end = Offset.zero;
+          var curve = Curves.ease;
+
+          var tween =
+          Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
           return SlideTransition(
             position: animation.drive(tween),

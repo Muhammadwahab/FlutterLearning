@@ -17,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         actions: [
           IconButton(
             onPressed: () {},
@@ -188,8 +189,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 physics: const ScrollPhysics(),
                 shrinkWrap: true,
                 itemBuilder: (_, i) {
-                  return Padding(
-                    padding: const EdgeInsets.all(12.0),
+                  return const Padding(
+                    padding: EdgeInsets.all(12.0),
                     child: BookingItemWidget(),
                   );
 

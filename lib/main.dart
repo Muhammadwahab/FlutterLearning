@@ -1,5 +1,7 @@
 
 import 'package:buscaro_flutter/SplashScreen.dart';
+import 'package:buscaro_flutter/authentication/AuthGate.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +24,7 @@ Future<void> main() async {
       primarySwatch: Colors.amber,
     ),
     title: 'Flutter Demo',
-    home: const SplashScreen(),
+    home: const AuthGate(),
   ));
 }
 

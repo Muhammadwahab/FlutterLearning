@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart'
     as http; // Correct import statement for http package
 
+import 'Constant.dart';
 import 'OnBoardingScreen.dart';
 import 'colors.dart';
 
@@ -24,12 +25,12 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   final GlobalKey _alertKey = GlobalKey();
-  final GlobalKey loaderKey = GlobalKey();
+
 
   late Timer _timer;
 
   Future<BuscaroMetaResponse?> loadData() async {
-    var dataURL = Uri.parse('https://api-dev.buscaro.com/api/v1/passengers');
+    var dataURL = Uri.parse('https://a/api/v1/passengersa');
 
     try {
       http.Response response = await http.get(dataURL);
@@ -55,19 +56,24 @@ class _SplashScreenState extends State<SplashScreen> {
             _timer = Timer(const Duration(seconds: 1), () {
               hideLoader();
               if (value == null) {
-                showErrorMessage(context);
+                Navigator.of(context)
+                    .pushReplacement(_onLoginScreenRoute());
+               // showErrorMessage(context);
               } else {
                 if (SharedPrefSingleton().getBool(ON_BOARDING) == true) {
                   print(value.success);
                   if (value.success == false) {
-                    showErrorMessage(context);
+                    Navigator.of(context)
+                        .pushReplacement(_onLoginScreenRoute());
                   } else {
                     Navigator.of(context)
                         .pushReplacement(_onLoginScreenRoute());
                   }
                 } else {
                   if (value.success == false) {
-                    showErrorMessage(context);
+                    // showErrorMessage(context);
+                    Navigator.of(context)
+                        .pushReplacement(_onLoginScreenRoute());
                   } else {
                     Navigator.of(context).pushReplacement(_onBoardingRoute());
                   }
