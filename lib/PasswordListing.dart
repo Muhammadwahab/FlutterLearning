@@ -12,7 +12,7 @@ class PasswordListing extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: UserCredsListScreen(),
+      home: const UserCredsListScreen(),
     );
   }
 }

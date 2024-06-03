@@ -24,7 +24,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final GlobalKey _alertKey = GlobalKey();
 
 
   late Timer _timer;
@@ -144,11 +143,11 @@ class _SplashScreenState extends State<SplashScreen> {
         context: context,
         pageBuilder: (context, __, ___) {
           Future.delayed(const Duration(seconds: 3), () {
-            print("current laoder is ${_alertKey.currentContext}");
+            print("current laoder is ${errorKey.currentContext}");
             Navigator.of(context).pop(); // Close the dialog
           });
           return Dialog(
-            key: _alertKey,
+            key: errorKey,
             backgroundColor: Colors.red,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0),
