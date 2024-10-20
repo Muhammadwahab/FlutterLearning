@@ -73,7 +73,7 @@ class _UserCredsListScreenState extends State<UserCredsListScreen> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            _showAddUserDialog("", "", null, 0);
+            _showAddUserDialog("","", "", null, 0);
           },
           backgroundColor: Colors.blue,
           child: const Icon(Icons.add),
@@ -94,6 +94,7 @@ class _UserCredsListScreenState extends State<UserCredsListScreen> {
               borderRadius: BorderRadius.circular(16.0),
               onTap: () {
                 _showAddUserDialog(
+                    userCreds[index].purpose,
                     userCreds[index].name,
                     userCreds[index].password,
                     userCreds[index].reference,
@@ -127,6 +128,13 @@ class _UserCredsListScreenState extends State<UserCredsListScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Text(
+                                userCreds[index].purpose,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
                               Text(
                                 userCreds[index].name,
                                 style: const TextStyle(
@@ -167,28 +175,29 @@ class _UserCredsListScreenState extends State<UserCredsListScreen> {
     );
   }
 
-  void _addUserCreds(String name, String password,
+  void _addUserCreds(String purpose,String name, String password,
       DocumentReference<Object?> documentReference) {
     setState(() {
       if (userCreds.isEmpty) {
         creds = _fetchCreds();
         userCreds.insert(
             0,
-            UserCreds(
+            UserCreds(purpose: purpose,
                 name: name, password: password, reference: documentReference));
       } else {
         userCreds.insert(
             0,
-            UserCreds(
+            UserCreds(purpose:purpose,
                 name: name, password: password, reference: documentReference));
       }
     });
   }
 
-  void updateCredsData(String name, String password, int index) {
+  void updateCredsData(String purpose,String name, String password, int index) {
     var credentials = userCreds[index];
 
     setState(() {
+      credentials.purpose=purpose;
       credentials.name = name;
       credentials.password = password;
     });
@@ -205,8 +214,9 @@ class _UserCredsListScreenState extends State<UserCredsListScreen> {
     });
   }
 
-  void _showAddUserDialog(String previousName, String previousPassword,
+  void _showAddUserDialog(String purposeTitle,String previousName, String previousPassword,
       DocumentReference<Object?>? updatedReference, int index) {
+    String purpose = purposeTitle;
     String name = previousName;
     String password = previousPassword;
 
@@ -214,6 +224,12 @@ class _UserCredsListScreenState extends State<UserCredsListScreen> {
         TextEditingController(); // initialize the controller
     // when API gets the data, do this:
     nameController.text = name;
+
+
+    TextEditingController purposeController =
+    TextEditingController();
+
+    purposeController.text=purpose;
 
     TextEditingController passwordController =
         TextEditingController(); // initialize the controller
@@ -228,6 +244,13 @@ class _UserCredsListScreenState extends State<UserCredsListScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              TextField(
+                controller: purposeController,
+                decoration: const InputDecoration(labelText: 'Purpose'),
+                onChanged: (value) {
+                  purpose = value;
+                },
+              ),
               TextField(
                 controller: nameController,
                 decoration: const InputDecoration(labelText: 'User Name'),
@@ -255,11 +278,12 @@ class _UserCredsListScreenState extends State<UserCredsListScreen> {
             TextButton(
               child: Text(previousName.isEmpty ? "Add" : "Update"),
               onPressed: () {
-                if (name.isNotEmpty && password.isNotEmpty) {
+                if (name.isNotEmpty && password.isNotEmpty && purpose.isNotEmpty) {
                   // showLoader(context);
 
                   var dateTime = DateTime.now().millisecondsSinceEpoch;
                   final UserCredential = <String, dynamic>{
+                    "purpose": purpose,
                     "username": name,
                     "password": EncryptionHelper.encryptText(
                         password, FirebaseAuth.instance.currentUser!.uid),
@@ -276,12 +300,12 @@ class _UserCredsListScreenState extends State<UserCredsListScreen> {
 
                     documentReference.set(UserCredential);
 
-                    _addUserCreds(name, password, documentReference);
+                    _addUserCreds(purpose,name, password, documentReference);
 
                     Navigator.of(context).pop();
                   } else {
                     updatedReference.set(UserCredential);
-                    updateCredsData(name, password, index);
+                    updateCredsData(purpose,name, password, index);
                     Navigator.of(context).pop();
                   }
                 }
